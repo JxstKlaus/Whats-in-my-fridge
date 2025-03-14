@@ -8,6 +8,7 @@ const ingredientsRoutes = require("./routes/ingredientRoutes");
 const fridgeRoutes = require("./routes/fridgeRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
+const shoppingListRoutes = require("./routes/shoppingListRoutes");
 
 // Initialize express with middlewares
 const app = express();
@@ -19,6 +20,7 @@ app.use("/api/ingredients", ingredientsRoutes);
 app.use("/api/fridge", fridgeRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/shopping-list", shoppingListRoutes);
 
 //connect to mongodb
 mongoose
