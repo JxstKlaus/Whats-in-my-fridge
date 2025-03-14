@@ -1,62 +1,60 @@
 const Fridge = require("../models/Fridge");
-const Ingredient = require("../models/Ingredient");
 
-// Get all fridges
-const getFridges = async (req, res) => {
+// Get User's Fridge
+const getFridge = async (req, res) => {
   try {
-    const fridges = await Fridge.find().populate("ingredients");
-    res.status(200).json(fridges);
+    const fridge = await Fridge.findOne({ user: req.user.userId });
+    if (!fridge) return res.status(404).json({ message: "Fridge not found" });
+
+    res.status(200).json(fridge);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching fridges" });
+    res.status(500).json({ message: "Error fetching fridge" });
   }
 };
 
-// Create a new fridge
+// Create or Update Fridge
+const updateFridge = async (req, res) => {
+  try {
+    const { ingredients } = req.body;
+
+    let fridge = await Fridge.findOne({ user: req.user.userId });
+
+    if (fridge) {
+      // Update existing fridge
+      fridge.ingredients = ingredients;
+    } else {
+      // Create new fridge
+      fridge = new Fridge({ user: req.user.userId, ingredients });
+    }
+
+    await fridge.save();
+    res.status(200).json(fridge);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating fridge" });
+  }
+};
+
 const createFridge = async (req, res) => {
   try {
-    const { name, userId } = req.body;
-    const newFridge = new Fridge({ name, userId, ingredients: [] });
-    await newFridge.save();
-    res.status(201).json(newFridge);
+    const fridge = new Fridge({ user: req.user.userId, ingredients: [] });
+    await fridge.save();
+    res.status(200).json(fridge);
   } catch (error) {
     res.status(500).json({ message: "Error creating fridge" });
   }
-};
+}
 
-// Add ingredient to fridge
-const addIngredientToFridge = async (req, res) => {
+// Delete Fridge (if needed)
+const deleteFridge = async (req, res) => {
   try {
-    const { fridgeId } = req.params;
-    const { ingredientId } = req.body;
+    const fridge = await Fridge.findOneAndDelete({ user: req.user.userId });
 
-    const fridge = await Fridge.findById(fridgeId);
     if (!fridge) return res.status(404).json({ message: "Fridge not found" });
 
-    fridge.ingredients.push(ingredientId);
-    await fridge.save();
-
-    res.status(200).json(fridge);
+    res.status(200).json({ message: "Fridge deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error adding ingredient" });
+    res.status(500).json({ message: "Error deleting fridge" });
   }
 };
 
-// Remove ingredient from fridge
-const removeIngredientFromFridge = async (req, res) => {
-  try {
-    const { fridgeId } = req.params;
-    const { ingredientId } = req.body;
-
-    const fridge = await Fridge.findById(fridgeId);
-    if (!fridge) return res.status(404).json({ message: "Fridge not found" });
-
-    fridge.ingredients = fridge.ingredients.filter(id => id.toString() !== ingredientId);
-    await fridge.save();
-
-    res.status(200).json(fridge);
-  } catch (error) {
-    res.status(500).json({ message: "Error removing ingredient" });
-  }
-};
-
-module.exports = { getFridges, createFridge, addIngredientToFridge, removeIngredientFromFridge };
+module.exports = { getFridge, createFridge, updateFridge, deleteFridge };

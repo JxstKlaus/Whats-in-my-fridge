@@ -9,9 +9,6 @@ const fridgeRoutes = require("./routes/fridgeRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 
-
-
-
 // Initialize express with middlewares
 const app = express();
 app.use(cors());
@@ -19,7 +16,7 @@ app.use(express.json());
 
 // Use routes
 app.use("/api/ingredients", ingredientsRoutes);
-app.use("/api/fridges", fridgeRoutes);
+app.use("/api/fridge", fridgeRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 
