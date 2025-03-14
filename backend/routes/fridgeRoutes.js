@@ -1,13 +1,22 @@
 const express = require("express");
-const { getFridge, createFridge, updateFridge, deleteFridge } = require("../controllers/fridgeController");
+const { getFridge,
+        createFridge,
+        updateFridge,
+        deleteFridge,
+        addIngredientToFridge,
+        removeIngredientFromFridge } = require("../controllers/fridgeController");
+
 const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.get("/", protect, getFridge); // Get user's fridge
-router.post("/", protect, createFridge); // Get user's fridge
-router.put("/", protect, updateFridge); // Update user's fridge
-router.delete("/", protect, deleteFridge); // Delete user's fridge (if needed)
+router.get("/", protect, getFridge);
+router.post("/", protect, createFridge);
+router.put("/", protect, updateFridge);
+router.delete("/", protect, deleteFridge);
+
+router.put("/add", protect, addIngredientToFridge);
+router.delete("/remove", protect, removeIngredientFromFridge);
 
 module.exports = router;
 
