@@ -1,24 +1,39 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";  // <-- Import useNavigate
-import { AuthContext } from "../context/AuthContext.jsx";  // <-- Ensure the correct import
+import React, { useState, useContext, use } from "react";
+import { useNavigate } from "react-router-dom"; 
+import { AuthContext } from "../context/AuthContext.jsx";
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate();  // <-- Initialize useNavigate
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+  });
+  
+  const [error, setError] = useState(null);
+
+  const handleChange = (e) => {
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      // Attempt to login
-      await login(email, password);
 
-      // After successful login, redirect to the homepage
-      navigate("/home");  // <-- Redirect to homepage
-    } catch (error) {
-      console.error("Login failed:", error);
+    if (!userData.email || !userData.password) {
+      setError("Email and password are required!");
+      return;
+    }
+
+    try {
+      const success = await login(userData.email, userData.password);
+      if (success) {
+        navigate("/home");
+      } else {
+        setError("Invalid email or password.");
+      }
+    } catch (err) {
+      setError("Login failed. Please try again.");
     }
   };
 
@@ -32,8 +47,9 @@ const LoginPage = () => {
             <input
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
               className="w-full p-2 mt-2 border border-gray-300 rounded-md"
             />
           </div>
@@ -42,8 +58,9 @@ const LoginPage = () => {
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={userData.password}
+              onChange={handleChange}
               className="w-full p-2 mt-2 border border-gray-300 rounded-md"
             />
           </div>
@@ -56,7 +73,7 @@ const LoginPage = () => {
         </form>
         <div className="mt-4 text-center">
           <button
-            onClick={() => console.log('Go to register page')}
+            onClick={() => navigate("/register")}
             className="text-blue-600 hover:underline"
           >
             Don't have an account? Register

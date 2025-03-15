@@ -25,11 +25,14 @@ export const AuthProvider = ({ children }) => {
       if (res.ok) {
         setUser(data);
         localStorage.setItem("user", JSON.stringify(data));
+        return true;
       } else {
         alert(data.message);
+        return false;
       }
     } catch (error) {
       console.error("Login error:", error);
+      return false;
     }
   };
 
@@ -45,11 +48,14 @@ export const AuthProvider = ({ children }) => {
       if (res.ok) {
         setUser(data);
         localStorage.setItem("user", JSON.stringify(data));
+        return true;
       } else {
         alert(data.message);
+        return false;
       }
     } catch (error) {
       console.error("Registration error:", error);
+      return false;
     }
   };
 

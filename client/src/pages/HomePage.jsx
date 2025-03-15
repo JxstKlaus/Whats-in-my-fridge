@@ -2,6 +2,8 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
+import Fridge from "../components/Fridge.jsx";
+
 const HomePage = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -17,6 +19,8 @@ const HomePage = () => {
       <button onClick={logout} className="mt-4 bg-red-500 text-white p-2 rounded">
         Logout
       </button>
+
+      <Fridge />
     </div>
   );
 };
