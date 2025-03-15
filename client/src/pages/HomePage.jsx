@@ -19,8 +19,9 @@ const HomePage = () => {
       <button onClick={logout} className="mt-4 bg-red-500 text-white p-2 rounded">
         Logout
       </button>
-
-      <Fridge />
+      <main className="flex justify-center items-center h-screen bg-gray-100">
+        <Fridge />
+      </main>
     </div>
   );
 };
